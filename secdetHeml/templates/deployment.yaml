@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: {{ .Values.Namespacename }}
+  name: {{ .Values.Deploymentname }}
+spec:
+  selector:
+    matchLabels:
+      {{- toYaml .Values.matchLabels | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- toYaml .Values.labels | nindent 8 }}
+    spec:
+      containers:
+      - name: {{ .Values.containers.name }}
+        image: {{ .Values.containers.image }}
+        imagePullPolicy: {{ .Values.containers.imagePullPolicy }}
+        ports:
+        - containerPort: 8000
+        resources:
+          requests:
+            memory: "100Mi"      # Adjust as needed
+            cpu: "500m"          # Adjust as needed
+          limits:
+            memory: "200Mi"      # Adjust as needed
+            cpu: "1"             # Adjust as needed
+

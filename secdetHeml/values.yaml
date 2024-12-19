@@ -1,0 +1,34 @@
+Namespacename: my-namespace
+Deploymentname: myapp
+Ingressname: myapp-ingress
+Servicename: myapp-service
+containers:
+  name: myapp-container
+  image: 432283946824.dkr.ecr.us-east-2.amazonaws.com/my-repository-name:latest
+  imagePullPolicy: Always
+matchLabels:
+  app: myapp
+labels:
+  app: myapp
+service:
+  type: LoadBalancer  # або NodePort, ClusterIP в залежності від налаштувань
+  ports:
+  - port: 8000
+    targetPort: 80000
+
+serviceAccount:
+  create: true 
+  name: "" 
+autoscaling:
+  enabled: true            #  HPA
+  minReplicas: 1           
+  maxReplicas: 10          
+  targetCPUUtilizationPercentage: 50  
+ingress:
+  enabled: true            # Встановіть true, якщо потрібно увімкнути Ingress
+  path: /                  # Шлях для Ingress
+  hosts:
+    - host: my-app.local   # Вкажіть хост для Ingress
+      paths:
+        - /
+

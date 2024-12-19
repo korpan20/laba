@@ -1,0 +1,236 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Shop {% endblock %}
+
+{% block style %}
+<style>
+    /* body */
+    .main {
+    margin-top: 5vh;
+    }
+
+    /* caracel */
+    .swiper-pagination-bullet {
+    transition: .3s;
+    }
+    .swiper-pagination-bullet:hover {
+    transition: .3s;
+    background-color: rgb(137, 182, 255);
+    }
+
+    /* colors */
+    .grey-text {
+    color: #b7b7b7!important;
+    }
+    .grey-text:hover {
+    color: #8e8e8e!important
+    }
+    .dark-grey-text {
+    color: #333232!important
+    }
+    .dark-grey-text:hover {
+    color: #1c1b1b!important
+    }
+    .grey_hover:hover {
+    color: #666666!important
+    }
+
+    /* mask */
+    .mask {
+    width: 100%;
+    height: 100%;
+    transition: .5s ease;
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    text-align: center;
+    }
+    .overlay {
+    width: 100%;
+    position: relative;
+    }
+    .overlay:hover, .card-img-top {
+    opacity: 0.3;
+    }
+
+    .overlay:hover .mask {
+    opacity: 1;
+    }
+
+    /* other */
+    .grey-text, .dark-grey-text, .grey-text:hover, .dark-grey-text:hover {
+    text-decoration: none;
+    }
+    .linker {
+    width: 100%;
+    height: 100%;
+    }
+
+    /* transitions */
+    .grey-text, .dark-grey-text, .grey-text:hover, 
+    .dark-grey-text:hover, .overlay:hover, .card-img-top, 
+    .overlay, .mask {
+    transition: .2s;
+    -moz-transition: .2s;
+    -webkit-transition: .2s;
+    -o-transition: .2s;
+}
+</style>
+{% endblock style %}
+
+{% block shop_active %} active {% endblock shop_active %}
+
+{% block text %}
+<div class="container">
+
+<!-- Categories tab -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark justify-content-between">
+
+    <!-- navigation header -->
+    <span class="nav-link transition">Categories:</span>
+
+    <!-- hamburger tabs -->
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
+        aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- catagories -->
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li class="nav-item active">
+                <a class="nav-link transition" href="#">All
+                    <span class="sr-only">(current)</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link transition" href="#">Technology</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link transition" href="#">Accessories</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link transition" href="#">Transportation</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link transition" href="#">Other</a>
+            </li>
+        </ul>
+        <form class="form-inline">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+    </div>
+    <!-- end of catagories -->
+</nav>
+
+<!-- products -->
+<section class="text-center mb-4">
+    <div class="row wow fadeIn">
+
+        <!-- for each object, return it's card -->
+        {% for item in object_list %}
+
+        <!-- card -->
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card">
+                <!-- card image -->
+                <div class="view overlay preview_image_container">
+                    {% if item.image %}
+                        <img src="{{ item.image.url }}"
+                            class="card-img-top" alt="">
+                    {% else %}
+                        <img src="{% static 'login/images/idk.png' %}"
+                            class="card-img-top" alt="">
+                    {% endif %}
+                        <a href="{{ item.get_absolute_url }}" class="linker">
+                            <div class="mask"></div>
+                        </a>
+                </div>
+
+                <!-- card content -->
+                <div class="card-body text-center">
+                    <!-- category -->
+                    <a href="" class="grey-text">
+                        <h5>{{ item.get_category_display }}</h5>
+                    </a>
+                    <h5>
+                        <!-- item name and badge -->
+                        <strong>
+                            <a href="{{ item.get_absolute_url }}"
+                                class="dark-grey-text grey_hover">{{ item.title }}
+                                {% if item.get_label_display == 'New' %}
+                                <span class="badge badge-primary">New</span>
+                                {% elif item.get_label_display == 'Limited' %}
+                                <span class="badge badge-warning">Limited</span>
+                                {% else %}
+                                <span class="badge badge-dark">Sold out</span>
+                                {% endif %}
+                            </a>
+                        </strong>
+                    </h5>
+
+                    <!-- price -->
+                    <h4 class="font-weight-bold blue-text">
+                        <strong>$
+                            {% if item.discounted_price %}
+                            {{ item.discounted_price }}
+                            {% else %}
+                            {{ item.price }}
+                            {% endif %}
+                        </strong>
+                    </h4>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- page navigation -->
+
+{% if is_paginated %}
+<nav class="d-flex justify-content-center wow fadeIn">
+    <ul class="pagination pg-blue">
+
+        <!-- left arrow shows if it has a previous page -->
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+            </a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+        </li>
+        {% endif %}
+
+        <!-- pages -->
+        <li class="page-item active">
+            <a class="page-link" href="?page={{ page_obj.number }}">{{ page_obj.number }}
+                <span class="sr-only">(current)</span>
+            </a>
+        </li>
+
+        <!-- right arrow -->
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+</div>
+{% endblock text %}

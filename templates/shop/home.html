@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Home {% endblock %}
+
+{% block style %}
+<!-- swiper carousel http://idangero.us/swiper/demos/200-infinite-loop.html -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.0/css/swiper.min.css">
+
+<style>
+    /* body */
+    .main {
+        margin-top: 5vh;
+        margin-bottom: 2vh;
+    }
+
+    /* carousel */
+    .swiper-pagination-bullet {
+        transition: .3s;
+    }
+    .swiper-pagination-bullet:hover {
+        transition: .3s;
+        background-color: rgb(137, 182, 255);
+    }
+</style>
+{% endblock style %}
+
+{% block banner %}
+
+<!-- alert for when you log out -->
+{% if extra_context.message %}
+<div class="alert alert-success alert-dismissible alert-notification" role="alert">
+    <strong>{{ extra_context.message_title }}</strong> {{ extra_context.message_text }}
+    <button type="button" class="close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endif %}
+
+<!-- payment message -->
+{% if messages %}
+
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }} alert-dismissible alert-notification" role="alert">
+    {{ message }}
+    <button type="button" class="close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endfor %}
+{% endif %}
+<div class="swiper-container">
+    <div class="swiper-wrapper">
+        <div class="swiper-slide"><a href="{% url 'login' %}"></a><img src="{% static 'login/images/loc.png' %}" alt="Grand Opening"></div>
+        <div class="swiper-slide"><a href="{% url 'login' %}"><img src="{% static 'login/images/pay.png' %}" alt="Greatest Deals in the country" title="Greatest Deals in the Country"></a></div>
+        <div class="swiper-slide"><a href="{% url 'register' %}" class='overflow: hiddent'><img src="{% static 'login/images/j.png' %}" alt="Login in today for free" title="Login Now"></a></div>
+        {% comment %} <div class="swiper-slide"><a href="{% url 'register' %}"><img src="{% static 'login/images/opening3.svg' %}" alt="Sign up today" title="Sign Up"></a></div> {% endcomment %}
+    </div>
+
+{% endblock banner %}
+
+{% block text %} 
+
+<!-- about this site -->
+<h1>crenaul</h1>
+<p><br>With us to star</p>
+
+
+<!-- TODO: some products from the shop -->
+<div class="products">
+    <h2>Shop</h2>
+    <br>
+    <p>Start buy things now <a href="{% url 'item_list' %}">here</a></p>
+</div>
+
+{% endblock text %}
+
+
+{% block scripts %}
+<!-- swiper carousel http://idangero.us/swiper/demos/200-infinite-loop.html -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.5.0/js/swiper.min.js"></script>
+<script>
+    // swiper settings
+    var swiper = new Swiper('.swiper-container', {
+        spaceBetween: 0,
+        centeredSlides: true,
+        loop: true,
+    autoplay: {
+        delay: 4200,
+        disableOnInteraction: false,
+    },
+    pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+    },
+    navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+        },
+    });
+
+    $(document).ready(function() {
+        $(".alert").slideDown();
+
+        // get swiper
+        var mySwiper = document.querySelector('.swiper-container').swiper
+
+        // pause and resume swiper when entering and exiting the slider with mouse
+        $(".swiper-container").mouseenter(function() {
+            mySwiper.autoplay.stop();
+        });
+        $(".swiper-container").mouseleave(function() {
+            mySwiper.autoplay.start();
+        });
+    });
+
+    $(".close").click(function(){
+        $(".alert").slideUp();
+    });
+</script>
+
+{% endblock scripts %}

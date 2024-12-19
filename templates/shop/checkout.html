@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Checkout {% endblock %}
+
+{% block style %}
+<style>
+    /* body */
+    .main {
+        margin-top: 5vh;
+    }
+
+    /* text */
+    h1 {
+        padding-top: 50px;
+        padding-bottom: 25px;
+    }
+    h2 {
+        padding-top: 50px;
+        padding-bottom: 20px;
+        font-size: 3em;
+    }
+
+    .address {
+        padding-left: 10px;
+    }
+    .checkout_form {
+        padding: 10px;
+    }
+</style>
+
+{% endblock style %}
+
+{% block cart_active %} active {% endblock cart_active %}
+
+{% block text %}
+{% load crispy_forms_tags %}
+<!-- Checkout Form -->
+<div class="container shadow-lg">
+
+<!-- header -->
+<h2 class="my-5 h2 text-center">Checkout form</h2>
+
+<div class="row"><div class="col-md-12 mb-4">
+
+<div class="card">
+
+    <!-- form -->
+    <form method="POST" class='checkout_form'>
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>
+    </form>
+</div>
+</div>
+</div></div>
+{% endblock text %}
+
+{% block scripts %}
+<script>
+$(document).ready(function() {
+    $('.form-check input').last().prop('disabled', true) // disable paypal
+    $('.form-check').last().append(`<br><small>Paypal will be impliemented later</small>`)
+})
+</script>
+{% endblock scripts %}
